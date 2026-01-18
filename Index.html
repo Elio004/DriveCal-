@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tarifa rápida inDriver</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#198754">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f3f5;
+    margin: 0;
+}
+.container {
+    max-width: 420px;
+    margin: auto;
+    background: #ffffff;
+    padding: 20px;
+    min-height: 100vh;
+}
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+select {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+.total {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #0d6efd;
+    margin: 15px 0;
+}
+.card {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+.malo { background: #dc3545; }
+.regular { background: #fd7e14; }
+.bueno {
+    background: #198754;
+    border: 3px solid #145c32;
+    font-size: 20px;
+}
+.precio {
+    font-weight: bold;
+}
+.detalle {
+    font-size: 14px;
+    opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h3>Tarifa rápida inDriver</h3>
+
+    <select id="km1">
+        <option value="">KM tramo 1</option>
+    </select>
+
+    <select id="km2">
+        <option value="">KM tramo 2</option>
+    </select>
+
+    <div id="resultado"></div>
+</div>
+
+<script>
+const km1 = document.getElementById("km1");
+const km2 = document.getElementById("km2");
+const resultado = document.getElementById("resultado");
+
+// Generar opciones 0–30 km
+for (let i = 0; i <= 30; i++) {
+    km1.innerHTML += `<option value="${i}">${i}</option>`;
+    km2.innerHTML += `<option value="${i}">${i}</option>`;
+}
+
+km1.addEventListener("change", calcular);
+km2.addEventListener("change", calcular);
+
+function calcular() {
+    if (km1.value === "" || km2.value === "") {
+        resultado.innerHTML = "";
+        return;
+    }
+
+    const totalKm = parseInt(km1.value) + parseInt(km2.value);
+
+    const tarifas = [
+        { nombre: "❌ Malo", clase: "malo", precio: 6 },
+        { nombre: "⚠️ Regular", clase: "regular", precio: 8 },
+        { nombre: "✅ Bueno", clase: "bueno", precio: 10 }
+    ];
+
+    let html = `<div class="total">Total KM: ${totalKm}</div>`;
+
+    tarifas.forEach(t => {
+        const precioFinal =
+            (totalKm * t.precio * 0.83) -
+            (totalKm * 1.57);
+
+        html += `
+        <div class="card ${t.clase}">
+            <div class="precio">${t.nombre}: $${precioFinal.toFixed(2)}</div>
+            <div class="detalle">$${t.precio}/km • -17% • -$1.57/km</div>
+        </div>
+        `;
+    });
+
+    resultado.innerHTML = html;
+}
+
+// Registrar Service Worker
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+</html>
