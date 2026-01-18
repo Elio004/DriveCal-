@@ -1,0 +1,16 @@
+{
+  "name": "Tarifa rápida inDriver",
+  "short_name": "inDriver",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#198754",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
